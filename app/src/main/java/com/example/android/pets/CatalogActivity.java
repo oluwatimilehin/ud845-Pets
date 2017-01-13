@@ -57,8 +57,14 @@ public class CatalogActivity extends AppCompatActivity {
 
         // Create and/or open a database to read from it
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        Cursor cursor = db.query(PetEntry.TABLE_NAME, null, null, null, null, null, null);
+        String[] projection = {
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                PetEntry.COLUMN_PET_GENDER,
+                PetEntry.COLUMN_PET_WEIGHT
+        };
+        Cursor cursor = db.query(PetEntry.TABLE_NAME, projection, null, null, null, null, null);
 
 //        // Perform this raw SQL query "SELECT * FROM pets"
 //        // to get a Cursor that contains all rows from the pets table.
