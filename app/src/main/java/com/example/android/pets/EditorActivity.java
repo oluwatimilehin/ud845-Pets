@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.example.android.pets.data.PetDbHelper;
@@ -122,6 +123,13 @@ public class EditorActivity extends AppCompatActivity {
         PetDbHelper mDbHelper = new PetDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         Long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+
+        if(newRowId == -1){
+            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this, "Pet saved with id " + newRowId, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
