@@ -106,8 +106,7 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long newRowId;
-        newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
+        long newRowId = db.insert(PetEntry.TABLE_NAME, null, values);
         Log.i(CatalogActivity.class.getSimpleName(), " " +newRowId);
 
 
