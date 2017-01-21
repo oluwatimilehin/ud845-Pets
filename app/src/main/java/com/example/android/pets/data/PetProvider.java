@@ -7,9 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import com.example.android.pets.data.PetContract.PetEntry;
+import android.util.Log;
 
-import static android.R.attr.id;
+import com.example.android.pets.data.PetContract.PetEntry;
 
 /**
  * Created by timad on 21/01/2017.
@@ -107,9 +107,28 @@ public class PetProvider extends ContentProvider {
      */
     private Uri insertPet(Uri uri, ContentValues values) {
 
-        // TODO: Insert a new pet into the pets database table with the given ContentValues
+        // Check that the name is not null
+        String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+        int gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+        int weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+        if (name == null) {
+            throw new IllegalArgumentException("Pet requires a name");
+        }
+        if(gender != 1 && gender != 2){
+            throw new IllegalArgumentException("Pet requires a gender");
+        }
+        if(weight < 0){
+            throw new IllegalArgumentException("Invalid gender specified");
+        }
+        // Insert a new pet into the pets database table with the given ContentValues
         SQLiteDatabase database = mPetDbHelper.getWritableDatabase();
-        database.insert(PetEntry.TABLE_NAME, null, values);
+        Long id = database.insert(PetEntry.TABLE_NAME, null, values);
+        // If the ID is -1, then the insertion failed. Log an error and return null.
+        if (id == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, id);
