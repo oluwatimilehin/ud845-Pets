@@ -144,30 +144,6 @@ public class PetProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        if(values.containsKey(PetEntry.COLUMN_PET_NAME)){
-            String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
-            if (name == null) {
-                throw new IllegalArgumentException("Pet requires a name");
-            }
-        }
-        if(values.containsKey(PetEntry.COLUMN_PET_BREED)) {
-            String breed = values.getAsString(PetEntry.COLUMN_PET_BREED);
-            if (breed == null) {
-                throw new IllegalArgumentException("Pet requires a breed");
-            }
-        }
-        if(values.containsKey(PetEntry.COLUMN_PET_GENDER)) {
-            int gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
-            if (gender != 1 && gender != 2) {
-                throw new IllegalArgumentException("Pet requires a gender");
-            }
-        }
-        if(values.containsKey(PetEntry.COLUMN_PET_WEIGHT)) {
-            int weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
-            if (weight < 0) {
-                throw new IllegalArgumentException("Invalid gender specified");
-            }
-        }
 
         final int match = sUriMatcher.match(uri);
         switch (match) {
@@ -192,7 +168,30 @@ public class PetProvider extends ContentProvider {
      * Return the number of rows that were successfully updated.
      */
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-
+        if(values.containsKey(PetEntry.COLUMN_PET_NAME)){
+            String name = values.getAsString(PetEntry.COLUMN_PET_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Pet requires a name");
+            }
+        }
+        if(values.containsKey(PetEntry.COLUMN_PET_BREED)) {
+            String breed = values.getAsString(PetEntry.COLUMN_PET_BREED);
+            if (breed == null) {
+                throw new IllegalArgumentException("Pet requires a breed");
+            }
+        }
+        if(values.containsKey(PetEntry.COLUMN_PET_GENDER)) {
+            int gender = values.getAsInteger(PetEntry.COLUMN_PET_GENDER);
+            if (gender != 1 && gender != 2) {
+                throw new IllegalArgumentException("Pet requires a gender");
+            }
+        }
+        if(values.containsKey(PetEntry.COLUMN_PET_WEIGHT)) {
+            int weight = values.getAsInteger(PetEntry.COLUMN_PET_WEIGHT);
+            if (weight < 0) {
+                throw new IllegalArgumentException("Invalid gender specified");
+            }
+        }
         // Update the selected pets in the pets database table with the given ContentValues
          SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
          int rowsUpdated = db.update(PetEntry.TABLE_NAME,values, selection, selectionArgs );
@@ -230,6 +229,14 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public String getType(Uri uri) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                return PetEntry.CONTENT_LIST_TYPE;
+            case PETS_ID:
+                return PetEntry.CONTENT_ITEM_TYPE;
+            default:
+                throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
+        }
     }
 }
