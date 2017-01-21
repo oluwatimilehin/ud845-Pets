@@ -183,6 +183,7 @@ public class PetProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
+
     }
 
     /**
@@ -192,10 +193,11 @@ public class PetProvider extends ContentProvider {
      */
     private int updatePet(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-        // TODO: Update the selected pets in the pets database table with the given ContentValues
+        // Update the selected pets in the pets database table with the given ContentValues
          SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
          int rowsUpdated = db.update(PetEntry.TABLE_NAME,values, selection, selectionArgs );
-        // TODO: Return the number of rows that were affected
+
+        //  Return the number of rows that were affected
         return rowsUpdated ;
     }
 
@@ -206,9 +208,23 @@ public class PetProvider extends ContentProvider {
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
-    }
+        // Get writeable database
+        SQLiteDatabase database = mPetDbHelper.getWritableDatabase();
 
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case PETS:
+                // Delete all rows that match the selection and selection args
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            case PETS_ID:
+                // Delete a single row given by the ID in the URI
+                selection = PetEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                return database.delete(PetEntry.TABLE_NAME, selection, selectionArgs);
+            default:
+                throw new IllegalArgumentException("Deletion is not supported for " + uri);
+        }
+    }
     /**
      * Returns the MIME type of data for the content URI.
      */
