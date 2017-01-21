@@ -58,4 +58,8 @@
 
     <!-- Label for dropdown menu option if the pet is female [CHAR LIMIT=20] -->
     <string name="gender_female">Female</string>
+
+    <!--Toast messages for save condition on EditorActivity-->
+    <string name="saved_toast">Pet is saved!</string>
+    <string name="unsaved_toast">Pet not saved!</string>
 </resources>
