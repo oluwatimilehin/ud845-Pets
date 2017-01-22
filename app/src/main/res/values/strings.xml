@@ -70,4 +70,7 @@
     <string name="empty_view_subtitle_text">Get started by adding a pet</string>
     <string name="updated_pet_toast">Pet Updated!</string>
     <string name="pet_not_updated_toast">No changes were made to the pet.</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
 </resources>
