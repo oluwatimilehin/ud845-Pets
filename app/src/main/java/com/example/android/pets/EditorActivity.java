@@ -308,8 +308,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                if(TextUtils.isEmpty(mNameEditText.getText()) || TextUtils.isEmpty(mBreedEditText
-                        .getText()) || mGenderSpinner.getSelectedItem() == getString(R.string
+                if(TextUtils.isEmpty(mNameEditText.getText())  || mGenderSpinner.getSelectedItem() == getString(R.string
                         .gender_unknown)){
                     finish();
                 }
