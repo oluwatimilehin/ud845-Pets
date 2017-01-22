@@ -37,6 +37,9 @@ public class CatalogActivity extends AppCompatActivity {
 
             }
         });
+        ListView listView = (ListView) findViewById(R.id.list_view);
+        View emptyView = (View) findViewById(R.id.empty_view);
+        listView.setEmptyView(emptyView);
     }
 
     @Override
@@ -63,10 +66,9 @@ public class CatalogActivity extends AppCompatActivity {
                 null);
 
         try {
-              PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
-              ListView listView = (ListView) findViewById(R.id.list_view);
-
-              listView.setAdapter(adapter);
+            ListView listView = (ListView) findViewById(R.id.list_view);
+             PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
+             listView.setAdapter(adapter);
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
             // resources and makes it invalid.
