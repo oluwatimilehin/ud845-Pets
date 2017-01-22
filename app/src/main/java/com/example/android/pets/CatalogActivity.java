@@ -2,6 +2,7 @@ package com.example.android.pets;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -59,26 +60,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
      */
     private void displayDatabaseInfo() {
 
-        String[] projection = {
-                PetEntry._ID,
-                PetEntry.COLUMN_PET_NAME,
-                PetEntry.COLUMN_PET_BREED,
-                PetEntry.COLUMN_PET_GENDER,
-                PetEntry.COLUMN_PET_WEIGHT
-        };
 
-        Cursor cursor = getContentResolver().query(PetEntry.CONTENT_URI, projection, null, null,
-                null);
-
-        try {
-            ListView listView = (ListView) findViewById(R.id.list_view);
-             adapter = new PetCursorAdapter(this, cursor);
-             listView.setAdapter(adapter);
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
-        }
     }
 
     private void insertPet(){
@@ -120,16 +102,29 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                PetEntry.COLUMN_PET_GENDER,
+                PetEntry.COLUMN_PET_WEIGHT
+        };
 
+        return new CursorLoader(this, PetEntry.CONTENT_URI, projection, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
+        ListView listView = (ListView) findViewById(R.id.list_view);
+            adapter = new PetCursorAdapter(this, data);
+            listView.setAdapter(adapter);
+            adapter.swapCursor(data);
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        adapter.swapCursor(null);
     }
 }
