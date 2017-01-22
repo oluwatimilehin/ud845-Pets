@@ -1,7 +1,9 @@
 package com.example.android.pets;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,15 +20,16 @@ import com.example.android.pets.data.PetDbHelper;
 /**
  * Displays list of pets that were entered and stored in the app.
  */
-public class CatalogActivity extends AppCompatActivity {
+public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
      public PetDbHelper mDbHelper;
+    PetCursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_catalog);
         mDbHelper = new PetDbHelper(this);
-
+        getLoaderManager().initLoader(0, null, this);
         // Setup FAB to open EditorActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,7 +43,9 @@ public class CatalogActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list_view);
         View emptyView = (View) findViewById(R.id.empty_view);
         listView.setEmptyView(emptyView);
+
     }
+
 
     @Override
     protected void onStart() {
@@ -67,7 +72,7 @@ public class CatalogActivity extends AppCompatActivity {
 
         try {
             ListView listView = (ListView) findViewById(R.id.list_view);
-             PetCursorAdapter adapter = new PetCursorAdapter(this, cursor);
+             adapter = new PetCursorAdapter(this, cursor);
              listView.setAdapter(adapter);
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its
@@ -111,5 +116,20 @@ public class CatalogActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }

@@ -54,14 +54,14 @@ public class PetCursorAdapter extends CursorAdapter {
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        // TODO: Fill out this method
+        //Fill out this method
         TextView tvName = (TextView) view.findViewById(R.id.name);
-        TextView tvSummmary = (TextView) view.findViewById(R.id.summary);
+        TextView tvSummary = (TextView) view.findViewById(R.id.summary);
 
-        String name = cursor.getString(cursor.getColumnIndex(PetEntry.COLUMN_PET_NAME));
-        String breed = cursor.getString(cursor.getColumnIndex(PetEntry
+        String name = cursor.getString(cursor.getColumnIndexOrThrow(PetEntry.COLUMN_PET_NAME));
+        String breed = cursor.getString(cursor.getColumnIndexOrThrow(PetEntry
                 .COLUMN_PET_BREED));
         tvName.setText(name);
-        tvSummmary.setText(breed);
+        tvSummary.setText(breed);
     }
 }
