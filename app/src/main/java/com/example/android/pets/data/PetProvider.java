@@ -84,6 +84,7 @@ public class PetProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
 
@@ -132,6 +133,8 @@ public class PetProvider extends ContentProvider {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
         }
+
+        getContext().getContentResolver().notifyChange(uri, null);
 
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
@@ -195,7 +198,7 @@ public class PetProvider extends ContentProvider {
         // Update the selected pets in the pets database table with the given ContentValues
          SQLiteDatabase db = mPetDbHelper.getWritableDatabase();
          int rowsUpdated = db.update(PetEntry.TABLE_NAME,values, selection, selectionArgs );
-
+        getContext().getContentResolver().notifyChange(uri, null);
         //  Return the number of rows that were affected
         return rowsUpdated ;
     }
@@ -209,8 +212,8 @@ public class PetProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Get writeable database
         SQLiteDatabase database = mPetDbHelper.getWritableDatabase();
-
         final int match = sUriMatcher.match(uri);
+        getContext().getContentResolver().notifyChange(uri, null);
         switch (match) {
             case PETS:
                 // Delete all rows that match the selection and selection args
@@ -223,6 +226,8 @@ public class PetProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
+
+
     }
     /**
      * Returns the MIME type of data for the content URI.
