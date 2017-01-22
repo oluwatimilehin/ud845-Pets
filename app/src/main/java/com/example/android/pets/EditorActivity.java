@@ -129,8 +129,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
     private void insertPet(){
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
-        int weightString = Integer.parseInt(mWeightEditText.getText().toString().trim());
+        int weightString;
 
+        if(TextUtils.isEmpty(mWeightEditText.getText())){
+            weightString = 0;
+        }
+        else{
+            weightString = Integer.parseInt(mWeightEditText.getText().toString().trim());
+        }
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, nameString);
         values.put(PetEntry.COLUMN_PET_BREED, breedString);
@@ -151,7 +157,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
     private void updatePet(){
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
-        int weightString = Integer.parseInt(mWeightEditText.getText().toString().trim());
+        int weightString;
+
+        if(TextUtils.isEmpty(mWeightEditText.getText())){
+            weightString = 0;
+        }
+        else{
+            weightString = Integer.parseInt(mWeightEditText.getText().toString().trim());
+        }
 
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, nameString);
@@ -159,7 +172,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         values.put(PetEntry.COLUMN_PET_WEIGHT, weightString);
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
 
-        getContentResolver().update(currentPetUri, values, null, null);
+        int rows = getContentResolver().update(currentPetUri, values, null, null);
+        if(rows != 0){
+            Toast.makeText(this,R.string.updated_pet_toast, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -176,13 +193,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                if(currentPetUri == null) {
-                    insertPet();
+                if(TextUtils.isEmpty(mNameEditText.getText()) || TextUtils.isEmpty(mBreedEditText
+                        .getText()) || mGenderSpinner.getSelectedItem() == getString(R.string
+                        .gender_unknown)){
+                    finish();
                 }
-                else{
-                    updatePet();
+                else {
+                    if (currentPetUri == null) {
+                        insertPet();
+                    } else {
+                        updatePet();
+                    }
+                    finish();
                 }
-                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
