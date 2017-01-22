@@ -148,6 +148,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
+    private void updatePet(){
+        String nameString = mNameEditText.getText().toString().trim();
+        String breedString = mBreedEditText.getText().toString().trim();
+        int weightString = Integer.parseInt(mWeightEditText.getText().toString().trim());
+
+        ContentValues values = new ContentValues();
+        values.put(PetEntry.COLUMN_PET_NAME, nameString);
+        values.put(PetEntry.COLUMN_PET_BREED, breedString);
+        values.put(PetEntry.COLUMN_PET_WEIGHT, weightString);
+        values.put(PetEntry.COLUMN_PET_GENDER, mGender);
+
+        getContentResolver().update(currentPetUri, values, null, null);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
@@ -162,7 +176,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                insertPet();
+                if(currentPetUri == null) {
+                    insertPet();
+                }
+                else{
+                    updatePet();
+                }
                 finish();
                 return true;
             // Respond to a click on the "Delete" menu option
