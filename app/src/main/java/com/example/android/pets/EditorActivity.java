@@ -66,7 +66,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
     Uri currentPetUri;
 
     private boolean mPetHasChanged = false;
-
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -80,16 +79,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        mNameEditText.setOnTouchListener(mTouchListener);
-        mBreedEditText.setOnTouchListener(mTouchListener);
-        mWeightEditText.setOnTouchListener(mTouchListener);
-        mGenderSpinner.setOnTouchListener(mTouchListener);
-
         Intent intent = getIntent();
         currentPetUri = intent.getData();
 
         if(currentPetUri == null){
             setTitle("Add a Pet");
+            invalidateOptionsMenu();
         }
         else{
             setTitle("Edit Pet");
@@ -101,6 +96,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
         mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);
         mWeightEditText = (EditText) findViewById(R.id.edit_pet_weight);
         mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
+
+        mNameEditText.setOnTouchListener(mTouchListener);
+        mBreedEditText.setOnTouchListener(mTouchListener);
+        mWeightEditText.setOnTouchListener(mTouchListener);
+        mGenderSpinner.setOnTouchListener(mTouchListener);
+
 
         setupSpinner();
 
@@ -243,6 +244,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new pet, hide the "Delete" menu item.
+        if (currentPetUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
